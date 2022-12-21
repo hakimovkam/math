@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:math.xcworkspace">
+   </FileRef>
+   <FileRef
+      location = "group:code-samples">
+   </FileRef>
+   <FileRef
+      location = "group:data-samples">
+   </FileRef>
+   <FileRef
+      location = "group:datasets">
+   </FileRef>
+   <FileRef
+      location = "group:materials">
+   </FileRef>
+   <FileRef
+      location = "group:misc">
+   </FileRef>
+   <FileRef
+      location = "group:src">
+   </FileRef>
+   <FileRef
+      location = "group:LICENSE">
+   </FileRef>
+   <FileRef
+      location = "group:CHANGELOG">
+   </FileRef>
+   <FileRef
+      location = "group:README_RUS.md">
+   </FileRef>
+   <FileRef
+      location = "group:README.md">
+   </FileRef>
+</Workspace>
