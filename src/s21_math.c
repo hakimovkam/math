@@ -1,36 +1,41 @@
 #include <stdio.h>
 #include <math.h>
 
-#define pi 3.1415926535897932384626433832795028841971693993751058209749445923
-#define exponent 2.7182818284590452353602874713526624977572470936999595749669676277
+#define pi 3.1415926535897932384626433
+#define exponent 2.718281828459045235360287471352662
 #define limitForCycle 5000
+#define eps 1e-9
 
-int s21_abs(int x);
+int s21_abs(int x); // +
 long double s21_acos(double x);
 long double s21_acos(double x);
 long double s21_asin(double x);
 long double s21_atan(double x);
-long double s21_ceil(double x);
+long double s21_ceil(double x); // +
 long double s21_cos(double x);
 long double s21_exp(double x);
-long double s21_fabs(double x);
-long double s21_floor(double x);
-long double s21_fmod(double x, double y);
+long double s21_fabs(double x); // +
+long double s21_floor(double x); // +
+long double s21_fmod(double x, double y); // +
 long double s21_log(double x);
 long double s21_pow(double base, double exp);
 long double s21_sin(double x);
-long double s21_sqrt(double x);
+long double s21_sqrt(double x); // +
 long double s21_tan(double x);
 long double s21_factorial(int x);
 
 int main() {
-    
-    double x = -41264412.123457;
   
-    printf("%f", log(0));
+    double x = 456.1357;
+    double y = 12;
     
-//    printf("%lf\n", pow(x, 5.1));
-//    printf("%Lf\n",  s21_pow(x, 5.1));
+    printf("4");
+    
+    printf("%Lf\n\n",s21_sin(x));
+
+    printf("%lf\n",sin(x));
+
+    
     
     return 0;
 }
@@ -51,10 +56,12 @@ long double s21_atan(double x) {
     long double result = 0;
     if (s21_fabs(x) < 1) {
         for (int i = 0; i < limitForCycle; i++) {
+//            printf("b");
             result += s21_pow(-1, i) * s21_pow(x, -1 - (2 * i)) / (1 + (2 * i));
         }
     } else {
         for (int i = 0; i < limitForCycle + 2000; i++) {
+//            printf("a");
             result += s21_pow(-1, i) * s21_pow(x, -1 - (2 * i)) / (1 + (2 * i));
         }
         result = pi * s21_sqrt(x * x) / (2 * x) - result;
@@ -97,8 +104,9 @@ long double s21_floor(double x) {
 }
 
 long double s21_fmod(double x, double y) {
-    long double result = 0;
-    return result;
+    long long int mod = 0;
+    mod = x / y;
+    return (long double)x - mod * (long double)y; 
 }
 
 long double s21_log(double x) {
@@ -107,13 +115,16 @@ long double s21_log(double x) {
     
     if (x == 0) {
         result = (long double) -INFINITY;
+//        printf("и");
     } else if (x == 1) {
+//        printf("и");
         result = 0;
     } else {
-        for (;x >- exponent; x /= expnent, i++) continue;
+        for (;x >- exponent; x /= exponent, i++) continue;
         for (int j = 0; j < 100; j++) {
+//            printf("и");
             compareNumber = result;
-            result = compareNumber + 2 * (x - s21_exp(compare)) / (x + s21_exp(compare));
+            result = compareNumber + 2 * (x - s21_exp(compareNumber)) / (x + s21_exp(compareNumber));
         }
 // Итенрационный метод Галея
 // Источник ниже(формула в конце)
@@ -127,15 +138,17 @@ long double s21_log(double x) {
 
 long double s21_pow(double base, double exp) {
     long double result = 1, temp = base;
-    long long int tempForExpInt = (long long int)exp;
+//    long long int tempForExpInt = (long long int)exp;
 
     if (temp < 0) {
         temp = - temp;
         result = s21_exp(exp * s21_log(temp));
         if (s21_fmod(exp, 2) != 0) {
+            
             result = -result;
         }
     } else {
+//        printf("и");
         result = s21_exp(exp * s21_log(base));
     }
     return result;
@@ -143,7 +156,9 @@ long double s21_pow(double base, double exp) {
 
 long double s21_sin(double x) {
     long double result = 0;
+    printf("3");
     for (;x < -2 * pi || 2 * pi < x;) {
+        printf("1");
         if (x > 2 * pi) {
             x -= 2 * pi;
         } else {
@@ -151,6 +166,7 @@ long double s21_sin(double x) {
         }
     }
     for (int i = 0; i < 500; i++) {
+        printf("2");
         result += s21_pow(-1, i) * s21_pow(x, 2 * i + 1) / s21_factorial(2 * i + 1);
     }
     return result;
@@ -159,10 +175,19 @@ long double s21_sin(double x) {
 long double s21_sqrt(double x) {
 // Метод половинного деления
     long double result = 0;
-    for (int i = 0; i < limitForCycle; i++) {
-        result = (s21_pow(-1, i) * s21_pow((-1 + x), i) * (-(1/2))) / s21_factorial(i);
+    long double left = 0, right = (x < 1) ? 1 : x, mid = 0;
+    
+    mid = (right + left) / 2;
+    
+    while ((mid - left) > eps) {
+        if (mid * mid > x) {
+            right = mid;
+        } else {
+            left = mid;
+        }
+        mid = (right + left) / 2;
     }
-    return result;
+    return mid;
 }
 
 long double s21_tan(double x) {
