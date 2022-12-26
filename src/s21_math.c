@@ -23,15 +23,15 @@ long double s21_sin(double x);
 long double s21_sqrt(double x); // +
 long double s21_tan(double x);
 long double s21_factorial(int x);
+double reader(double x);
 
 int main() {
   
     double x = 456.1357;
     double y = 12;
     
-    printf("4");
-    
-    printf("%Lf\n\n",s21_sin(x));
+    s21_sin(x);
+    printf("%Lf\n", s21_sin(x));
 
     printf("%lf\n",sin(x));
 
@@ -56,12 +56,10 @@ long double s21_atan(double x) {
     long double result = 0;
     if (s21_fabs(x) < 1) {
         for (int i = 0; i < limitForCycle; i++) {
-//            printf("b");
             result += s21_pow(-1, i) * s21_pow(x, -1 - (2 * i)) / (1 + (2 * i));
         }
     } else {
         for (int i = 0; i < limitForCycle + 2000; i++) {
-//            printf("a");
             result += s21_pow(-1, i) * s21_pow(x, -1 - (2 * i)) / (1 + (2 * i));
         }
         result = pi * s21_sqrt(x * x) / (2 * x) - result;
@@ -115,9 +113,7 @@ long double s21_log(double x) {
     
     if (x == 0) {
         result = (long double) -INFINITY;
-//        printf("и");
     } else if (x == 1) {
-//        printf("и");
         result = 0;
     } else {
         for (;x >- exponent; x /= exponent, i++) continue;
@@ -148,28 +144,21 @@ long double s21_pow(double base, double exp) {
             result = -result;
         }
     } else {
-//        printf("и");
         result = s21_exp(exp * s21_log(base));
     }
     return result;
 }
 
 long double s21_sin(double x) {
-    long double result = 0;
-    printf("3");
-    for (;x < -2 * pi || 2 * pi < x;) {
-        printf("1");
-        if (x > 2 * pi) {
-            x -= 2 * pi;
-        } else {
-            x += 2 * pi;
-        }
+    x = (long double)reader(x);
+    long double result = x, temp = x, i = 1.;
+    
+    while (s21_fabs(result) > eps) {
+        result = -1 * result * x * x / (2 * i * (2* i +1));
+        i += 1.;
+        temp += result;
     }
-    for (int i = 0; i < 500; i++) {
-        printf("2");
-        result += s21_pow(-1, i) * s21_pow(x, 2 * i + 1) / s21_factorial(2 * i + 1);
-    }
-    return result;
+    return temp;
 }
 
 long double s21_sqrt(double x) {
@@ -196,13 +185,23 @@ long double s21_tan(double x) {
 }
 
 long double s21_factorial(int x) {
-    long double result = 0;
+    long double result = 1;
     if (x < 0) {
         result = 0;
     } else if ( x == 0) {
         result = 1;
     } else {
-        result = x * s21_factorial(x - 1);
+        for (int i = x; i != 0; i -= 1) {
+            result *= i;
+        }
     }
     return result;
+}
+
+
+double reader(double x) {
+    while (x > pi || x < -pi) {
+        x += x > pi ? -2 * pi : 2 * pi;
+    }
+    return x;
 }
