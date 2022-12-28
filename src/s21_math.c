@@ -1,41 +1,12 @@
-#include <stdio.h>
+#include "s21_math.h"
 #include <math.h>
-
-#define pi 3.1415926535897932384626433
-#define exponent 2.718281828459045235360287471352662
-#define limitForCycle 5000
-#define eps 1e-9
-
-int s21_abs(int x); // +
-long double s21_acos(double x);
-long double s21_acos(double x);
-long double s21_asin(double x);
-long double s21_atan(double x);
-long double s21_ceil(double x); // +
-long double s21_cos(double x);
-long double s21_exp(double x);
-long double s21_fabs(double x); // +
-long double s21_floor(double x); // +
-long double s21_fmod(double x, double y); // +
-long double s21_log(double x);
-long double s21_pow(double base, double exp);
-long double s21_sin(double x);
-long double s21_sqrt(double x); // +
-long double s21_tan(double x);
-long double s21_factorial(int x);
-double reader(double x);
 
 int main() {
   
     double x = 456.1357;
-    double y = 12;
+    double y = 2;
     
-    s21_sin(x);
-    printf("%Lf\n", s21_sin(x));
-
-    printf("%lf\n",sin(x));
-
-    
+    printf("%Lf\n%lf\n", s21_sin(y), sin(y));
     
     return 0;
 }
@@ -54,16 +25,6 @@ long double s21_asin(double x) {
 
 long double s21_atan(double x) {
     long double result = 0;
-    if (s21_fabs(x) < 1) {
-        for (int i = 0; i < limitForCycle; i++) {
-            result += s21_pow(-1, i) * s21_pow(x, -1 - (2 * i)) / (1 + (2 * i));
-        }
-    } else {
-        for (int i = 0; i < limitForCycle + 2000; i++) {
-            result += s21_pow(-1, i) * s21_pow(x, -1 - (2 * i)) / (1 + (2 * i));
-        }
-        result = pi * s21_sqrt(x * x) / (2 * x) - result;
-    }
     return result;
 }
 
@@ -78,13 +39,25 @@ long double s21_ceil(double x) {
 }
 
 long double s21_cos(double x) {
-    long double result = 0;
-    return result;
+    x = reader(x);
+    return s21_sin((pi / 2) - x);
 
 }
 
 long double s21_exp(double x) {
-    long double result = 0;
+    long double result = 1, addValue = 1, cntr =1;
+        
+    while (s21_fabs(addValue) > eps) {
+        addValue *= x / cntr;
+        cntr += 1;
+        result += addValue;
+        if (result > dblMax) {
+            result = INFINITY;
+            break;
+        }
+    }
+    
+
     return result;
 }
 
@@ -180,8 +153,8 @@ long double s21_sqrt(double x) {
 }
 
 long double s21_tan(double x) {
-    long double result = 0;
-    return result;
+    x = reader(x);
+    return s21_sin(x) / s21_cos(x);
 }
 
 long double s21_factorial(int x) {
@@ -199,6 +172,7 @@ long double s21_factorial(int x) {
 }
 
 
+// Возвращает x в промежутке между -pi и pi
 double reader(double x) {
     while (x > pi || x < -pi) {
         x += x > pi ? -2 * pi : 2 * pi;
