@@ -3,13 +3,17 @@
 #include <math.h>
 
 int main() {
-  double x = 12;
+    long double x = 1234567890123456;
   double y = 0.1;
   long double e = 0;
   long double e1 = 0;
-//   e = s21_tan(y);
-  e1 = atan(y);
-  printf("Func = %Lf\nOrig = %Lf\n", e, e1);
+    for (int i = -10; i < 10; i++) {
+//    int i = 4;
+    e = s21_log(i);
+        e1 = log(i);
+        printf("%d\nFunc = %.6Lf\nOrig = %.6Lf\n\n", i, e, e1);
+        
+    }
   return 0;
 }
 
@@ -66,12 +70,12 @@ long double s21_cos(double x) {
 long double s21_exp(double x) {
   long double result = 1, addValue = 1, cntr = 1;
 
-  while (s21_fabs(addValue) > EPS) {
+  while (s21_fabs(addValue) > S21_EPS) {
     addValue *= x / cntr;
     cntr += 1;
     result += addValue;
     if (result > DBLMAX) {
-      result = INFINITY;
+      result = S21_INF;
       break;
     }
   }
@@ -134,25 +138,26 @@ long double s21_fmod(double x, double y) {
 
 long double s21_log(double x) {
   int i = 0;
-  long double result = 0, compareNumber = 0;
+  long double result = 0, temp  = 0;
 
-  if (x == 0) {
-    result = (long double)-INFINITY;
-  } else if (x == 1) {
-    result = 0;
-  } else {
-    for (; x > -EXP; x /= EXP, i++) continue;
-    for (int j = 0; j < 100; j++) {
-      //            printf("и");
-      compareNumber = result;
-      result = compareNumber +
-               2 * (x - s21_exp(compareNumber)) / (x + s21_exp(compareNumber));
+    if (x >= 0) {
+      if (x == 0) {
+          result = (long double)-S21_INF;
+      } else if (x == 1) {
+          result = 0;
+      } else {
+          for (; x >= S21_EXP; x /= S21_EXP, i++) continue;
+          for (int j = 0; j < 100; j++) {
+              temp = result;
+              result = temp + 2 * (x - s21_exp(temp)) / (x + s21_exp(temp));
+        }
+        /* Итенрационный метод Галея, источник ниже(формула в конце)
+         https://wikicsu.ru/wiki/natural_logarithm */
+      }
+      result += i;
+    } else {
+        result = (long double)S21_NAN;
     }
-    // Итенрационный метод Галея
-    // Источник ниже(формула в конце)
-    // https://wikicsu.ru/wiki/natural_logarithm
-  }
-  result += i;
   return result;
 }
 
@@ -180,7 +185,7 @@ long double s21_sin(double x) {
     x = (long double)reader(x);
     result = x;
     temp = x;
-    while (s21_fabs(result / temp) > EPS) {
+    while (s21_fabs(result / temp) > S21_EPS) {
       result = -1 * result * x * x / (2 * i * (2 * i + 1));
       i += 1.;
       temp += result;
@@ -194,17 +199,21 @@ long double s21_sqrt(double x) {
   long double result = 0;
   long double left = 0, right = (x < 1) ? 1 : x, mid = 0;
 
-  mid = (right + left) / 2;
-
-  while ((mid - left) > EPS) {
-    if (mid * mid > x) {
-      right = mid;
+    if (x > 0 ) {
+        mid = (left + right) / 2;
+        while ((mid - left) > S21_EPS) {
+              if (mid * mid > x) {
+                  right = mid;
+            } else {
+                left = mid;
+            }
+            mid = (right + left) / 2;
+        }
+        result = mid;
     } else {
-      left = mid;
+        result = (long double)S21_NAN;
     }
-    mid = (right + left) / 2;
-  }
-  return mid;
+    return result;
 }
 
 long double s21_tan(double x) {
