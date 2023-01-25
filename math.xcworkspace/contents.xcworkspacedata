@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:src/UnitTests/tests.h">
-   </FileRef>
-   <FileRef
-      location = "group:src/UnitTests/tests.c">
-   </FileRef>
-   <FileRef
       location = "group:math.xcworkspace">
    </FileRef>
    <FileRef
